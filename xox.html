@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xox game</title>
+    <style>
+        body{
+            text-align: center;
+            color: white;
+        }
+        .container{
+            display: flex;
+            justify-content: center;
+        }
+        .btn{
+            width: 100px;
+            height: 100px;
+            border: 3px solid white;
+            padding: 0px 10px 20px;
+            /* border-radius: 2rem; */
+        }
+        .red{
+            background-color: #FC766AFF;
+        }
+        .blue{
+            background-color: #5B84B1FF;
+        }
+        #size{
+            font-size: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>XOX GAME</h1>
+    <h2>RED was X and BLUE was O</h2>
+    <h2 id="h2">RED:0<br>BLUE:0</h2>
+    <div class="container">
+        <div class="line1">
+            <div class="btn" type="button"></div>
+            <div class="btn" type="button"></div>
+            <div class="btn" type="button"></div>
+        </div>
+        <div class="line2">
+            <div class="btn" type="button"></div>
+            <div class="btn" type="button"></div>
+            <div class="btn" type="button"></div>
+        </div>
+        <div class="line3">
+            <div class="btn" type="button"></div>
+            <div class="btn" type="button"></div>
+            <div class="btn" type="button"></div>
+        </div>
+    </div>
+    <script>
+        let body=document.querySelector("body");
+        let allbtn=document.querySelectorAll(".btn");
+        let h2=document.querySelector("#h2");
+        // let btn=document.querySelector(".btn")
+
+        let h3=document.createElement("h3");
+        h3.innerText="press any key to start a new game";
+
+        let checkvar;
+        let red=0,blue=0;
+
+        // body.classList.add("blue")
+
+        document.addEventListener("keypress",()=>{
+            checkvar=null;
+            for(btn of allbtn){
+                btn.innerText="";
+                btn.removeAttribute("id");
+            }
+            body.classList.remove("blue");
+            body.classList.add("red");
+            let h3 = document.querySelector("h3");
+            h3.remove();
+            for(btn of allbtn){
+                btn.addEventListener("click",btnpress);
+            }
+        })
+
+        for(btn of allbtn){
+            btn.addEventListener("click",btnpress);
+        }
+
+        body.classList.add("red")
+
+        function btnpress(){
+            if(body.classList[0]=="red"){
+                if(this.getAttribute("id")==null){
+                    this.innerText="x";
+                    // this.classList.add("size");
+                    this.setAttribute("id","size");
+                    body.classList.remove("red");
+                    body.classList.add("blue");
+                }
+            }else{
+                if(this.getAttribute("id")==null){
+                    this.innerText="o";
+                    // this.classList.add("size");
+                    this.setAttribute("id","size");
+                    body.classList.remove("blue");
+                    body.classList.add("red");
+                }
+            }
+            checkvar=check();
+            if (checkvar=="red"){
+                console.log('red win');
+                body.classList.remove("blue");
+                body.classList.add("red");
+                red++;
+                let h3=document.createElement("h3");
+                h3.innerText="press any key to start a new game"
+                body.append(h3);
+            }
+            if (checkvar=="blue"){
+                console.log("blue win");
+                body.classList.remove("red");
+                body.classList.add("blue");
+                blue++;
+                body.append(h3);
+            }
+            if (checkvar == "red" || checkvar == "blue") {
+            // Remove event listeners if the game is over
+            for (btn of allbtn) {
+                btn.removeEventListener("click", btnpress);
+            }
+            }
+            h2.innerHTML=`RED:${red}<br>BLUE:${blue}`;
+
+        }
+
+        function for_check_row(){
+            let countx=0;
+            let counto=0;
+            for(j=0;j<9;j+=3){
+                for(i=j;i<3+j;i++){
+                    if(allbtn[i].innerText=='x'){
+                        countx++;
+                        if (countx==3){
+                            return "red"
+                        }
+                    }
+                    if(allbtn[i].innerText=='o'){
+                        counto++;
+                        if (counto==3){
+                            return "blue"
+                        }
+                    }
+                }
+                countx=0
+                counto=0
+            }
+        }
+
+        function for_check_cols(){
+            let countx=0;
+            let counto=0;
+            for(j=0;j<3;j++){
+                for(i=j;i<j+7;i+=3){
+                    if(allbtn[i].innerText=='x'){
+                        countx++;
+                        if (countx==3){
+                            return "red"
+                        }
+                    }
+                    if(allbtn[i].innerText=='o'){
+                        counto++;
+                        if (counto==3){
+                            return "blue"
+                        }
+                    }
+                }
+                countx=0
+                counto=0
+            }
+        }
+
+        function for_check_cross(){
+            let countx=0,counto=0;
+            for(i=0;i<9;i+=4){
+                if(allbtn[i].innerText=='x'){
+                    countx++;
+                    if (countx==3){
+                            return "red"
+                    }
+                }
+            }
+            for(i=2;i<7;i+=2){
+                if(allbtn[i].innerText=='o'){
+                    counto++;
+                    if (counto==3){
+                            return "blue"
+                    }
+                }
+            }
+        }
+
+        function check(){
+            let c=for_check_row();
+            if(c){
+                return c;
+            }
+            c=for_check_cols();
+            if(c){
+                return c;
+            }
+            c=for_check_cross();
+            if(c){
+                return c;
+            }
+        }
+    </script>
+</body>
+</html>
